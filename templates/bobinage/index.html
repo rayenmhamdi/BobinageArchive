@@ -1,0 +1,65 @@
+{% extends 'layout.html' %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block content %}
+    <button id="btn-show-all-children" style="display:none" type="button">Expand All</button>
+    <div class="container mt-3">
+        <table id="example" class="display table table-hover table-sm" style="width:100%">
+            <thead>
+            <tr>
+                <th>Marque</th>
+                <th>Cheveaux</th>
+                <th>Type</th>
+                <th>Ampérage</th>
+                <th>Couplage</th>
+                <th>Spires</th>
+                <th>Longeur Rotor</th>
+                <th>Diamètre Rotor</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for archive in archives %}
+                <tr>
+                    <td>{{ archive.marque }}</td>
+                    <td>{{ archive.Cheveaux }}</td>
+                    <td>{{ archive.type }}</td>
+                    <td>{{ archive.Amperage }}</td>
+                    <td>{{ archive.couplage }}</td>
+                    <td>{{ archive.nb_spire_principale }} {% if archive.nb_spire_aux %}| {{ archive.nb_spire_aux }}
+                        (aux){% endif %}</td>
+                    <td>{{ archive.longeur_rotor_mm }}</td>
+                    <td>{{ archive.diametre_rotor_mm }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(document).ready(function () {
+
+            var table = $('#example').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/French.json"
+                },
+                searchHighlight: true,
+                responsive: true,
+                lengthMenu: [[-1, 10, 25, 50, 100, 200, 500], ["Tous", 10, 25, 50, 100, 200, 500]],
+            });
+
+            $('#btn-show-all-children').on('click', function () {
+                // Expand row details
+                table.rows(':not(.parent)').nodes().to$().find('td:first-child').trigger('click');
+            });
+
+            setTimeout(function(){ $("#btn-show-all-children").click() }, 500);
+
+        });
+
+    </script>
+{% endblock %}
